@@ -19,9 +19,9 @@ const Dashboard = () => {
 
     const fetchData = async () => {
         try {
-            const roomsRes = await axios.get('/api/rooms');
+            const roomsRes = await axios.get('https://room-reserve-clean.onrender.com/api/rooms');
             setRooms(roomsRes.data);
-            const bookingsRes = await axios.get(`/api/bookings/user/${user.id}`);
+            const bookingsRes = await axios.get(`https://room-reserve-clean.onrender.com/api/bookings/user/${user.id}`);
             setHistory(bookingsRes.data);
         } catch (err) {
             toast.error("Data load failed");
@@ -33,7 +33,7 @@ const Dashboard = () => {
     const handleBooking = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('/api/bookings/add', {
+            const res = await axios.post('https://room-reserve-clean.onrender.com/api/bookings/add', {
                 userId: user.id, 
                 roomId: bookingData.roomId,
                 startDate: bookingData.start, 

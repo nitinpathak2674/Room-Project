@@ -12,11 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/bookings', bookingRoutes);
+app.use('https://room-reserve-clean.onrender.com/api/auth', authRoutes);
+app.use('https://room-reserve-clean.onrender.com/api/bookings', bookingRoutes);
 
 // Test Route
-app.get('/api/rooms', async (req, res) => {
+app.get('https://room-reserve-clean.onrender.com/api/rooms', async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM rooms');
         res.json(rows);

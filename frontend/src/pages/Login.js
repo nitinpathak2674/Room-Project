@@ -12,7 +12,7 @@ const Login = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const res = await axios.post('/api/auth/login', formData);
+            const res = await axios.post('https://room-reserve-clean.onrender.com/api/auth/login', formData);
             
             if (res.data.success) {
                 localStorage.setItem('token', res.data.token); 
