@@ -1,0 +1,38 @@
+Project Name: ROOM RESERVE - Full Stack Room Booking System
+1. How Overlapping Bookings are Prevented
+To ensure a room is not booked for the same dates twice, the system follows a strict validation logic at the backend:
+
+Check Before Insert: Before confirming a new booking, the server executes a SQL query to verify if any existing booking for the specific roomId has dates that overlap with the user's requested startDate and endDate.
+
+Logic: The system identifies conflicts by checking if a record exists where the requested start date is before or on the existing end date, and the requested end date is after or on the existing start date.
+
+Database Level Security: If the query returns any conflicting records, the booking is rejected with a 400 Bad Request or 409 Conflict status, preventing double-booking at the database level.
+
+2. Project Structure & Organization
+The application follows a Separation of Concerns (SoC) architecture:
+
+Backend (Node.js/Express): Manages business logic, JWT security, and database communication. It is designed to be stateless to allow for easier scaling.
+
+Frontend (React.js): Built with a component-based architecture and Tailwind CSS for a responsive, modern UI.
+
+Schema Automation: The backend is configured to automatically detect and create necessary MySQL tables (users, rooms, bookings) upon the first initialization, ensuring a seamless setup process.
+
+Environment-Driven Configuration: Sensitive credentials and port settings are managed through a .env system, separating configuration from the core source code.
+
+3. Frontend and Backend Communication
+RESTful APIs: Communication is handled via JSON using Axios, following standard HTTP methods (GET, POST).
+
+Database Integration: The system uses a MySQL instance. For local evaluation, the backend establishes a connection to the host specified in the environment variables and manages connection pooling for performance.
+
+JWT Security: Protected routes utilize JSON Web Tokens. The frontend stores the token in localStorage and includes it in the Authorization header for verified requests.
+
+4. Future Scalability Plan
+To scale this system for high-traffic environments, the following optimizations would be implemented:
+
+Caching with Redis: Implementing an in-memory cache to store room availability, significantly reducing the frequency of expensive SQL overlap queries.
+
+Load Balancing: Using Nginx or an Application Load Balancer to distribute traffic across multiple Node.js instances to prevent a single point of failure.
+
+Database Optimization: Adding composite indexes on roomId, start_date, and end_date in the MySQL tables to optimize the search speed for date conflicts.
+
+Microservices Architecture: Decoupling the 'Booking Engine' from 'User Management' and 'Notification Services' to allow each service to scale independently based on demand.

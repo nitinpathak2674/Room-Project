@@ -1,5 +1,8 @@
 const mysql = require('mysql2/promise');
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -19,7 +22,7 @@ const db = {
             const [results] = await connection.execute(sql, params);
             return [results];
         } catch (err) {
-            console.error("DB Error:", err.message);
+            console.error("DB Error FULL:", err);
             throw err;
         } finally {
             // Kaam khatam hote hi connection band (Vercel ke liye Best)

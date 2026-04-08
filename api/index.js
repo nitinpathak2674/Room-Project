@@ -25,14 +25,14 @@ app.get('/api/rooms', async (req, res) => {
     }
 });
 
-// Root Route (Vercel health check ke liye)
+
 app.get("/", (req, res) => res.send("Server is running perfectly!"));
 
-// LOCAL DEVELOPMENT ke liye listen (Vercel par ye ignore hoga)
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
 
-// VERCEL KE LIYE SABSE ZAROORI LINE:
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 module.exports = app;
