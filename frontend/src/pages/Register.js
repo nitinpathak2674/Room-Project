@@ -13,7 +13,7 @@ const Register = () => {
         setIsSubmitting(true);
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            const res = await axios.post('https://room-reserve-clean.onrender.com/api/auth/register', formData);
+            const res = await axios.post('/api/auth/register', formData);
             if (res.data.success) {
                 toast.success("Account created! Please login.");
                 navigate('/');

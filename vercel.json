@@ -1,7 +1,8 @@
 {
-  "version": 2,
   "rewrites": [
-    { "source": "https://room-reserve-clean.onrender.com/api/(.*)", "destination": "https://room-reserve-clean.onrender.com/api/index.js" },
-    { "source": "/(.*)", "destination": "/frontend/build/$1" }
+    {
+      "source": "/api/(.*)",
+      "destination": "https://room-reserve-clean.onrender.com/api/$1"
+    }
   ]
 }

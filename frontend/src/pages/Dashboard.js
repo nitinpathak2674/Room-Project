@@ -14,14 +14,13 @@ const Dashboard = () => {
     useEffect(() => {
         if (!user) navigate('/');
         else fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchData = async () => {
         try {
-            const roomsRes = await axios.get('https://room-reserve-clean.onrender.com/api/rooms');
+            const roomsRes = await axios.get("/api/rooms");
             setRooms(roomsRes.data);
-            const bookingsRes = await axios.get(`https://room-reserve-clean.onrender.com/api/bookings/user/${user.id}`);
+            const bookingsRes = await axios.get(`/api/bookings/user/${user.id}`);
             setHistory(bookingsRes.data);
         } catch (err) {
             toast.error("Data load failed");
@@ -33,16 +32,16 @@ const Dashboard = () => {
     const handleBooking = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('https://room-reserve-clean.onrender.com/api/bookings/add', {
-                userId: user.id, 
+            const res = await axios.post('/api/bookings/add', {
+                userId: user.id,
                 roomId: bookingData.roomId,
-                startDate: bookingData.start, 
+                startDate: bookingData.start,
                 endDate: bookingData.end
             });
             if (res.data.success) {
                 toast.success("Booking Confirmed!");
                 setBookingData({ roomId: '', start: '', end: '' });
-                fetchData(); 
+                fetchData();
             }
         } catch (err) {
             toast.error(err.response?.data?.error || "Booking Failed");
@@ -104,7 +103,7 @@ const Dashboard = () => {
                         </div>
 
                         {priceDetails && (
-                            <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl animate-in fade-in duration-500">
+                            <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
                                 <div className="flex justify-between text-[10px] sm:text-xs mb-2">
                                     <span className="text-slate-400">Rate/Night</span>
                                     <span className="text-white font-medium">₹{priceDetails.perNight}</span>
@@ -144,16 +143,16 @@ const Dashboard = () => {
                                 </thead>
                                 <tbody className="divide-y divide-slate-800">
                                     {history.map(h => (
-                                        <tr key={h.id} className="hover:bg-slate-800/20 transition-colors">
+                                        <tr key={h.id}>
                                             <td className="p-4">
-                                                <div className="font-bold text-white text-xs sm:text-sm whitespace-nowrap">{h.room_name}</div>
+                                                <div className="font-bold text-white text-xs sm:text-sm">{h.room_name}</div>
                                                 <div className="text-[9px] text-slate-500">ID: #{h.id}</div>
                                             </td>
-                                            <td className="p-4 text-center text-[10px] sm:text-xs font-medium text-slate-400 whitespace-nowrap">
+                                            <td className="p-4 text-center text-[10px] sm:text-xs text-slate-400">
                                                 {new Date(h.start_date).toLocaleDateString()} - {new Date(h.end_date).toLocaleDateString()}
                                             </td>
                                             <td className="p-4 text-center">
-                                                <span className="bg-emerald-500/10 text-emerald-500 px-2 sm:px-3 py-1 rounded-full text-[8px] sm:text-[10px] font-black border border-emerald-500/20 whitespace-nowrap">
+                                                <span className="bg-emerald-500/10 text-emerald-500 px-2 sm:px-3 py-1 rounded-full text-[8px] sm:text-[10px] font-black border border-emerald-500/20">
                                                     CONFIRMED
                                                 </span>
                                             </td>
