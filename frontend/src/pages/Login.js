@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axios'; // axios instance
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -12,13 +12,17 @@ const Login = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const res = await axios.post('/api/auth/login', formData);
-            
+            // axios instance will prepend baseURL automatically
+            const res = await axios.post('/auth/login', formData);
+
             if (res.data.success) {
+                // save token & user
                 localStorage.setItem('token', res.data.token); 
                 localStorage.setItem('user', JSON.stringify(res.data.user));
                 toast.success("Welcome back!");
                 navigate('/dashboard');
+            } else {
+                toast.error(res.data.message || "Login failed");
             }
         } catch (err) {
             toast.error(err.response?.data?.error || "Login Failed");
@@ -32,30 +36,22 @@ const Login = () => {
             <div className="bg-[#1e293b] p-6 sm:p-8 rounded-3xl border border-slate-800 w-full max-w-[400px] shadow-2xl">
                 <h2 className="text-2xl sm:text-3xl font-black text-white mb-6 text-center italic tracking-wider">ROOM RESERVE</h2>
                 <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
-                    <div>
-                        <input 
-                            type="email" 
-                            name="user_email_unique" 
-                            required 
-                            autoComplete="new-password" 
-                            placeholder="Email Address" 
-                            className="w-full p-4 bg-[#0f172a] border border-slate-700 rounded-2xl text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base" 
-                            onChange={e => setFormData({...formData, email: e.target.value})} 
-                            value={formData.email} 
-                        />
-                    </div>
-                    <div>
-                        <input 
-                            type="password" 
-                            name="user_password_unique"
-                            required 
-                            autoComplete="new-password" 
-                            placeholder="Password" 
-                            className="w-full p-4 bg-[#0f172a] border border-slate-700 rounded-2xl text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base" 
-                            onChange={e => setFormData({...formData, password: e.target.value})} 
-                            value={formData.password} 
-                        />
-                    </div>
+                    <input 
+                        type="email" 
+                        required 
+                        placeholder="Email Address" 
+                        className="w-full p-4 bg-[#0f172a] border border-slate-700 rounded-2xl text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base" 
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    />
+                    <input 
+                        type="password" 
+                        required 
+                        placeholder="Password" 
+                        className="w-full p-4 bg-[#0f172a] border border-slate-700 rounded-2xl text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base" 
+                        value={formData.password}
+                        onChange={e => setFormData({ ...formData, password: e.target.value })}
+                    />
                     <button 
                         type="submit" 
                         disabled={isSubmitting} 

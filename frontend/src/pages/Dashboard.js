@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -14,10 +14,10 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const roomsRes = await axios.get("/api/rooms");
+                const roomsRes = await axios.get("/rooms");
                 setRooms(roomsRes.data);
 
-                const bookingsRes = await axios.get(`/api/bookings/user/${user.id}`);
+                const bookingsRes = await axios.get(`/bookings/user/${user.id}`);
                 setHistory(bookingsRes.data);
             } catch (err) {
                 toast.error("Data load failed");
@@ -36,7 +36,7 @@ const Dashboard = () => {
     const handleBooking = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('/api/bookings/add', {
+            const res = await axios.post('/bookings/add', {
                 userId: user.id,
                 roomId: bookingData.roomId,
                 startDate: bookingData.start,
@@ -47,7 +47,7 @@ const Dashboard = () => {
                 toast.success("Booking Confirmed!");
                 setBookingData({ roomId: '', start: '', end: '' });
 
-                const bookingsRes = await axios.get(`/api/bookings/user/${user.id}`);
+                const bookingsRes = await axios.get(`/bookings/user/${user.id}`);
                 setHistory(bookingsRes.data);
             }
         } catch (err) {
