@@ -1,8 +1,9 @@
 const db = require('./config/db');
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
 
 const cleanAndFix = async () => {
     try {
+        // Create tables if they don't exist (safe)
         await db.query(`CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -26,26 +27,24 @@ const cleanAndFix = async () => {
             FOREIGN KEY (room_id) REFERENCES rooms(id)
         )`);
 
-        await db.query("DELETE FROM bookings");
-        await db.query("DELETE FROM users");
-        await db.query("DELETE FROM rooms");
-
+        // Insert rooms if not already there
         await db.query(`
-            INSERT INTO rooms (id, name, price_per_night) VALUES 
-            (1, 'Deluxe Suite', 2500),
-            (2, 'Standard Room', 1500),
-            (3, 'Executive Suite', 5000)
+            INSERT INTO rooms (name, price_per_night)
+            SELECT * FROM (SELECT 'Deluxe Suite', 2500) AS tmp
+            WHERE NOT EXISTS (SELECT name FROM rooms WHERE name='Deluxe Suite') LIMIT 1
+        `);
+        await db.query(`
+            INSERT INTO rooms (name, price_per_night)
+            SELECT * FROM (SELECT 'Standard Room', 1500) AS tmp
+            WHERE NOT EXISTS (SELECT name FROM rooms WHERE name='Standard Room') LIMIT 1
+        `);
+        await db.query(`
+            INSERT INTO rooms (name, price_per_night)
+            SELECT * FROM (SELECT 'Executive Suite', 5000) AS tmp
+            WHERE NOT EXISTS (SELECT name FROM rooms WHERE name='Executive Suite') LIMIT 1
         `);
 
-        const dummyPassword = 'password123';
-        const hashedPassword = await bcrypt.hash(dummyPassword, 10);
-        
-        await db.query(`
-            INSERT INTO users (id, name, email, password) VALUES 
-            (1, 'Test Admin', 'admin@test.com', ?)
-        `, [hashedPassword]);
-
-        console.log("Database Ready!");
+        console.log("Rooms seeded successfully!");
         process.exit();
     } catch (err) {
         console.error("Error:", err.message);
